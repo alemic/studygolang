@@ -9,11 +9,14 @@ goto end
 :ok
 
 set OLDGOPATH=%GOPATH%
-set GOPATH=%~dp0
+set GOPATH=%~dp0;%~dp0..\thirdparty
 
-go install github.com/go-sql-driver/mysql
-go install github.com/studygolang/mux
-go install github.com/gorilla/sessions
+if not exist log mkdir log
+
+gofmt -w src
+
+:: -tags "debug" 表示测试
+go install -tags "debug" studygolang
 
 set GOPATH=%OLDGOPATH%
 

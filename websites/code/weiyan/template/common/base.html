@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>{{template "title" .}} | 微言微语</title>
+    <link href="/static/css/front.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="/static/css/app.min.css" media="screen" rel="stylesheet" type="text/css">
+    {{template "css"}}
+    <meta name="keywords" content="微言微语,微言,微语">
+    <meta name="description" content="微言微语,一句话经典。">
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="/static/img/weiyan.ico">
+  </head>
+  <body data-offset="50">
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <h3>
+            <a href="/"><img alt="Text_logo" src="/static/img/logo.jpg" style="width:123px;height:29px;"></a>
+          </h3>
+          
+          <ul class="nav pull-left" id="userbar">
+            {{template "topnav" .}}
+          </ul>
+
+          <ul class="nav pull-right" id="userbar">
+            {{if .me}}
+            {{if .me.isadmin}}
+            <li>
+              <a href="/admin/">管理后台</a>
+            </li>
+            {{end}}
+            <li class="dropdown" id="user_menu">
+              <a href="#user_menu" class="dropdown-toggle" data-toggle="dropdown">{{.me.username}} <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li class="first"><a href="/user/{{.me.username}}">我的主页</a></li>
+                 <li><a href="/message/system">消息</a></li>
+                <li><a href="/account/edit">设置</a></li>
+                <li class="last"><a href="/account/logout">退出</a></li>
+              </ul>
+            </li>
+            {{else}}
+            <li class="first"><a href="/account/register">注册</a></li><li class="last"><a href="/account/login">登录</a></li>
+            {{end}}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+     {{template "content" .}}
+    </div>
+
+    <a class="go_top" href="#" style="display: none;"><i class="icon icons_go_top"></i></a>
+
+    <footer class="footer">
+      <div class="container">
+        <div>
+          <div class="pull-left" style="margin-right:10px;">
+            <img src="/static/img/logo.png" style="width:48px;" alt="logo">
+          </div>
+          <span id="onlineusers"></span><span id="maxonline"></span>
+          <br/>微言微语，触动她的心扉。<a href="http://rizhibao.com" name="rizhi9002337e26fa2f5dbdb8d30ed972ef87bao" >日志宝-在线日志分析平台</a>
+
+          <script type="text/javascript">
+          var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+          document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F99bc2778a4b65519ebdbab9bece1519b' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+        </div> 
+      </div>
+    </footer>
+
+    <script src="http://libs.baidu.com/jquery/1.7.1/jquery.min.js"></script>
+    <!--<script type="text/javascript" src="/static/js/jquery-1.9.1.min.js"></script>-->
+    <!--<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>-->
+    <script src="http://libs.baidu.com/bootstrap/2.0.4/js/bootstrap.min.js"></script>
+    <!--<script src="/static/js/bootstrap-transition.js"></script>
+    <script src="/static/js/bootstrap-alert.js"></script>
+    <script src="/static/js/bootstrap-modal.js"></script>
+    <script src="/static/js/bootstrap-dropdown.js"></script>
+    <script src="/static/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="/static/js/bootstrap-tab.js"></script>
+    <script src="/static/js/bootstrap-tooltip.js"></script>
+    <script src="/static/js/bootstrap-popover.js"></script>
+    <script src="/static/js/bootstrap-button.js"></script>
+    <script src="/static/js/bootstrap-collapse.js"></script>
+    <script src="/static/js/bootstrap-carousel.js"></script>
+    <script src="/static/js/bootstrap-typeahead.js"></script>-->
+    <script type="text/javascript" src="/static/js/jquery.atwho.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.timeago.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.timeago.zh-CN.js"></script>
+    <!--<script type="text/javascript" src="/static/js/jquery.html5-fileupload.js"></script>-->
+    <script type="text/javascript" src="/static/js/sisyphus.min.js"></script>
+    <!--<script type="text/javascript" src="/static/js/notification.js"></script>-->
+    <script type="text/javascript" src="/static/js/app.js"></script>
+    {{template "js" .}}
+  </body>
+</html>

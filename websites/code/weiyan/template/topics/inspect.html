@@ -1,0 +1,141 @@
+{{define "topnav"}}
+            <li><a href="/topics">活跃</a></li> 
+            <li><a href="/topics/popular" class="popular"><i class="icon small_liked"></i> 热门</a></li>
+            <li><a href="/topics/last" rel="nofollow">最新</a></li> 
+            <li class="active"><a href="/topics/inspect" rel="nofollow">审帖</a></li>
+            <li><a href="/topics/new" rel="nofollow">投稿</a></li>
+{{end}}
+{{define "content"}}
+<div id="main" class="container-fluid">
+  <div class="content">
+    <div id="topic_show" class="topics box hfeed">
+      <div class="topic hentry">
+        <div class="infos">
+          <div class="pull-left avatar_large">
+            <a href="/user/{{.topic.user.Username}}"><img alt="{{.topic.user.Username}}" class="uface" src="{{gravatar .topic.user.Email 48}}" style="width:24px;height:24px;"></a>
+          </div>
+          <div class="info leader">
+            <a href="/user/{{.topic.user.Username}}" data-name="{{.topic.user.Username}}">{{if .topic.user.Name}}{{.topic.user.Name}}{{else}}{{.topic.user.Username}}{{end}}</a>
+          </div>
+        </div>
+        <div class="body entry-content">{{.topic.content}}</div>
+        <div class="bar">
+          <ul>
+            <li class="up">
+            <a href="javascript:vote2({{.topic.tid}},1)" id="up-{{.topic.tid}}">{{.topic.like}}</a>
+            </li>
+            <li class="down">
+            <a href="javascript:vote2({{.topic.tid}},0)" id="dn-{{.topic.tid}}">{{.topic.hate}}</a>
+            </li>
+            <style type="text/css">
+            .bar li.share {
+            margin-left: 190px !important;
+            }
+            </style>
+          </ul>
+       
+        </div>
+
+        <div id="pager-new" class="clearfix pager-wrapper">
+          <a href="/topics/inspect/{{.topic.tid}}/0" class="pager-btn pager-pre">
+          滚粗
+          </a>
+          <a href="/topics/inspect/{{.topic.tid}}/1" class="pager-btn pager-next">
+          启人心智
+          </a>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="box" style="text-align:center;">
+      <h2><a href="/topics/node{{.topic.nid}}">{{.topic.node}}</a></h2>
+      <div class="content">
+        <a href="/topics/new?nid={{.topic.nid}}" class="btn btn-success">投稿</a>
+      </div>
+    <div class="box clearfix">
+      <h2>其他话题</h2>
+      <ul id="other_topics" data-tid="{{.topic.tid}}" data-nid="{{.topic.nid}}">
+      </ul>
+    </div>
+  </div>
+  
+  </div>
+</div>
+{{end}}
+{{define "title"}}{{.topic.content }} {{end}}
+{{define "css"}}
+<link href="/static/css/markdown.css" media="screen" rel="stylesheet" type="text/css">
+<link href="/static/css/topics.css" media="screen" rel="stylesheet" type="text/css">
+<link href="/static/css/prettify.css" media="screen" rel="stylesheet" type="text/css">
+{{end}}
+{{define "js"}}
+<script type="text/javascript" src="/static/js/topics.js"></script>
+<script type="text/javascript" src="/static/js/vote.js"></script>
+<script type="text/javascript" src="/static/js/prettify.js"></script>
+<script type="text/javascript" src="/static/js/Markdown.Converter.js"></script>
+<script type="text/javascript" src="/static/js/Markdown.Sanitizer.js"></script>
+<script type="text/javascript" src="/static/js/Markdown.Editor.js"></script>
+<script type="text/javascript" src="/static/js/social-share-button.js"></script>
+<script type="text/javascript">
+{{if .me}}
+var MeUsername = {{.me.username}};
+{{else}}
+var MeUsername = 0;
+{{end}}
+(function () {
+    {{if .me}}
+    // 评论框
+    var topicConverter = Markdown.getSanitizingConverter();
+    
+    topicConverter.hooks.chain("preBlockGamut", function (text, rbg) {
+        return text.replace(/^ {0,3}""" *\n((?:.*?\n)+?) {0,3}""" *$/gm, function (whole, inner) {
+            return "<blockquote>" + rbg(inner) + "</blockquote>\n";
+        });
+    });
+    
+    var topicEditor = new Markdown.Editor(topicConverter);
+    
+    topicEditor.run();
+    {{end}}
+    // 转换主帖
+    var converter = new Markdown.Converter();
+    $('.entry-content').html($(converter.makeHtml($('.entry-content').html())).addClass('prettyprint'));
+    
+    // 转换回复
+    $('.reply-content').each(function(i){
+        if ($(this).html() != "") {
+            $(this).html($(converter.makeHtml($(this).html())).addClass('prettyprint'));
+        }
+    });
+    // 语法高亮
+    prettyPrint();
+})();
+
+$(function(){
+    // 加载节点下其他话题
+    var otherTopics = $('#other_topics'),
+        tid = otherTopics.data('tid'),
+        nid = otherTopics.data('nid'),
+        uri = '/topics/others/' + nid+'_'+tid+'.json';
+    $.getJSON(uri, function(data){
+        if (!data.errno) {
+            var topics = '';
+            for (var i in data.topics) {
+                var topic = data.topics[i];
+                topics += '<li class="cutoff"><a href="/topics/'+topic.tid+'" title="'+topic.title+'">'+topic.title+'</a></li>';
+            }
+            if (topics == "") {
+                otherTopics.parent('div.box').hide();
+            } else {
+                otherTopics.html(topics);
+            }
+        }
+    });
+    
+})
+</script>
+
+{{end}}

@@ -1,0 +1,115 @@
+{{define "topnav"}}
+            <li {{if .active}}class="active"{{end}}><a href="/topics">活跃</a></li> 
+            <li {{if .popular}}class="active"{{end}}><a href="/topics/popular" class="popular"><i class="icon small_liked"></i> 热门</a></li>
+            <li {{if .last}}class="active"{{end}}><a href="/topics/last" rel="nofollow">最新</a></li> 
+            <li><a href="/topics/inspect" rel="nofollow">审帖</a></li>
+            <li><a href="/topics/new" rel="nofollow">投稿</a></li>
+
+{{end}}
+{{define "content"}}
+
+<div class="main">
+
+<div class="col1">
+    <div>      
+      <div id="topic_show" class="topics box hfeed">
+        <a href="/topicslist{{if .popular}}/popular{{end}}{{if .last}}/last{{end}}" rel="nofollow">列表模式</a><hr>
+        <div class="topic hentry">
+          <div class="topics">
+            {{range .topics}}
+            <div class="topic topic_line">
+              <div class="pull-left avatar">
+                <a href="/user/{{.user.Username}}"><img alt="{{.user.Username}}" class="uface" src="{{gravatar .user.Email 48}}" style="width:32px;height:32px;"></a>
+              </div>
+              <div class="right_info">
+                <div class="pull-right replies">
+                  {{if .reply}}
+                  <a href="/topics/{{.tid}}#reply{{.reply}}" class="count state_false">{{.reply}}</a>
+                  {{end}}
+                </div>
+                <div class="infos">
+                  <div class="info">
+                    <a href="/user/{{.user.Username}}" data-name="{{.user.Username}}">{{if .user.Name}}{{.user.Name}}{{else}}{{.user.Username}}{{end}}</a>
+                   </div>
+
+                  <div class="body entry-content">
+                    {{.content}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="bar">
+                <ul>
+                  <style type="text/css">
+                    .bar li.up {
+                    margin-left: 10px !important;
+                    }
+                  </style>
+                  <li class="up">
+                  <a href="javascript:vote2({{.tid}},1)" id="up-{{.tid}}">{{.like}}</a>
+                  </li>
+                  <li class="down">
+                  <a href="javascript:vote2({{.tid}},0)" id="dn-{{.tid}}">-{{.hate}}</a>
+                  </li>
+
+                  <li class="comment">
+                  <a href="/topics/{{.tid}}">  {{if .reply}}{{.reply}}{{else}}0{{end}}</a>
+                  </li>
+
+                 
+                </ul>               
+              </div>
+
+            </div>
+            {{else}}
+            <p style="text-align:center;">暂时没有任何帖子</p>
+            {{end}}
+          </div>
+        </div>
+      </div>
+
+      {{if .page}}
+      <div class="pagination"><ul>{{.page}}</ul></div>
+      {{end}}
+    </div>
+</div>
+
+<div class="col2">
+  <div class="sidebar">
+    <div class="hot_nodes nodes box clearfix">
+      <h2>TAGS</h2>
+      <ul id="hotnodes">
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div>
+{{end}}
+{{define "title"}}微言 {{end}}
+{{define "css"}}
+<link href="/static/css/topics.css" media="screen" rel="stylesheet" type="text/css">
+{{end}}
+{{define "js"}}
+
+<script type="text/javascript" src="/static/js/topics.js"></script>
+<script type="text/javascript" src="/static/js/vote.js"></script>
+<script type="text/javascript">
+$(function(){
+    $.getJSON('/nodes/hot.json', function(data){
+        if (!data.errno) {
+            if (data.nodes == null) {
+                return
+            }
+            var count = data.nodes.length
+              nodeHtml = '';
+            for (var i=0; i<count; i++) {
+                var node = data.nodes[i];
+                nodeHtml += '<li> <a href="/topics/node'+node.nid+'" title="'+node.name+'">'+node.name+'</a></li>';
+            }
+            $('#hotnodes').html(nodeHtml);
+        }
+    });
+});
+</script>
+{{end}}

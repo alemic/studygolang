@@ -1,0 +1,31 @@
+{{define "topnav"}}
+            <li {{if .active}}class="active"{{end}}><a href="/topics">活跃</a></li> 
+            <li {{if .popular}}class="active"{{end}}><a href="/topics/popular" class="popular"><i class="icon small_liked"></i> 热门</a></li>
+            <li {{if .last}}class="active"{{end}}><a href="/topics/last" rel="nofollow">最新</a></li> 
+            <li><a href="/topics/inspect" rel="nofollow">审帖</a></li>
+            <li><a href="/topics/new" rel="nofollow">投稿</a></li>
+{{end}}
+
+
+{{define "content"}}
+<div id="main" class="container-fluid">
+  <div class="content">
+    <div class="recent_topics box">
+      <ul>
+        {{range .topics}}
+        <li>
+          <a href="/topics/{{.tid}}">{{.content}}</a>
+        </li>
+        {{end}}
+      </ul>
+    </div>
+  </div>
+  {{if .page}}
+  <div class="pagination"><ul>{{.page}}</ul></div>
+  {{end}}
+</div>
+
+{{end}}
+
+{{define "title"}}微言 {{end}}
+{{define "css"}}<link href="/static/css/users.css" media="screen" rel="stylesheet" type="text/css">{{end}}

@@ -1,0 +1,94 @@
+{{define "topnav"}}
+            <li {{if .active}}class="active"{{end}}><a href="/topics">活跃</a></li> 
+            <li {{if .popular}}class="active"{{end}}><a href="/topics/popular" class="popular"><i class="icon small_liked"></i> 热门</a></li>
+            <li {{if .last}}class="active"{{end}}><a href="/topics/last" rel="nofollow">最新</a></li> 
+            <li><a href="/topics/inspect" rel="nofollow">审帖</a></li>
+            <li><a href="/topics/new" rel="nofollow">投稿</a></li>
+{{end}}
+{{define "content"}}
+<div id="main" class="container-fluid">
+  <div class="subnav">
+    <ul class="nav nav-tabs"><li class="first active"><a href="/user/{{.user.Username}}">个人信息</a></li></ul>
+  </div>
+
+  <div class="content">
+    <div class="box">
+      <div class="userinfo vcard">
+        <div class="pull-right center" style="width:120px;">
+          <a href="/user/{{.user.Username}}" title="{{.user.Username}}"><img alt="{{.user.Username}}" class="uface" src="{{gravatar .user.Email 120}}" style="width:120px;height:120px;"></a>
+          {{if .me.username}}
+          {{if noteq .user.Username .me.username}}
+          <a class="btn btn-info" href="/message/send?username={{.user.Username}}" style="margin:10px;">发送消息</a>
+          {{end}}
+          {{end}}
+        </div>
+        <span class="label role">{{range .user.Rolenames}}{{.}} {{end}}</span>
+        <ul>
+          <li class="with_nbsp">
+            <label>&nbsp;</label>
+            <span class="title">第 {{.user.Uid}} 位会员</span>
+          </li>
+          <li>
+            <label>ID:</label>
+            <strong class="fn">{{.user.Username}}</strong>
+          </li>
+          {{if .user.Name}}
+          <li>
+            <label>名字:</label>
+            <span>{{.user.Name}}</span>
+          </li>
+          {{end}}
+          {{if .user.Open}}
+          <li>
+            <label>Email:</label>
+            <span><a href="mailto:{{.user.Email}}">{{.user.Email}}</a></span>
+          </li>
+          {{end}}
+          <li>
+            <label>注册时间:</label>
+            <span>{{.user.Ctime}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="recent_topics box">
+      <h2 class="title">最近投稿</h2>
+      <ul>
+        {{range .topics}}
+        <li>
+          <a href="/topics/{{.Tid}}">{{.Content}}</a>
+        </li>
+        {{else}}
+        <li class="alert alert-info center">暂无</li>
+        {{end}}
+      </ul>
+    </div>
+    <div class="box">
+      <h2 class="title">最近评论</h2>
+      <ul class="recent_replies">
+        {{range .replies}}
+        <li>
+          <div class="title">
+            <a href="/topics/{{.tid}}">{{.Content}}</a>
+          </div>
+          <div class="body">
+            {{.cmt_content}}
+          </div>
+        </li>
+        {{else}}
+        <li class="alert alert-info center">暂无</li>
+        {{end}}
+      </ul>
+    </div>
+  </div>
+  <div class="sidebar">
+    <div class="box" id="user_github_repos">
+        
+    </div>
+  </div>
+ </div>
+</div>
+{{end}}
+{{define "title"}}{{.user.Username}}的个人首页 {{end}}
+{{define "css"}}<link href="/static/css/users.css" media="screen" rel="stylesheet" type="text/css">{{end}}

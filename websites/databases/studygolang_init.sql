@@ -10,33 +10,26 @@ INSERT INTO `role`(`name`) VALUES('中级会员');
 INSERT INTO `role`(`name`) VALUES('初级会员');
 
 -- 帖子节点表
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(0, 'Golang', 'Go语言基本问题探讨');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(1, 'Go基础', 'Go语言基础、语法、规范等');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(1, 'Go标准库', 'Go语言标准库使用、例子、源码等');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(1, 'Go源码', '深入Go语言内部实现，分享Go语言源码学习心得');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(1, 'Go Web开发', '用Go语言进行Web开发');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(1, 'Go问与答', '任何关于Go语言的问题都可以到这里提');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(1, 'Go动态', 'Go语言相关资讯和最新动态');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(1, 'Go开发工具', '交流Go开发工具的使用');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(1, 'Go实战', 'Go语言实际使用经验交流');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(1, 'Go工具链', '(go tool chain)Go提供的各种工具学习、使用');
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(0, '微言', '微言');
 
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(0, '开源控', 'Golang本身开源，自然gopher们都是开源控');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(9, 'Go Web框架', '开源的Go Web框架，你知道多少？使用了吗？');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(9, 'Go第三方库', '第三方Go库，你都用了哪些？');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(9, 'Go代码分享', '和gopher们分享您自己的Go代码吧');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(9, 'Go资料', '好多Go语言资料啊，学习学习……');
-
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(0, 'Study Golang', 'Golang China，Go语言学习园地，中文社区');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(14, '社区公告', '社区最新动态、公共以及其他信息');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(14, '反馈', '使用过程中遇到了问题，可以在这里提交');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(14, '社区开发', '对开发该社区感兴趣的可以一起加入进来哦');
-
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(0, '分享', '分享生活、学习、工作等方方面面');
-INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(18, 'Markdown', '当下Markdown是相当火，本站就使用Markdown发帖，有必要聊聊它的使用');
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(1, '触动心扉', '触动你心扉的那句话');
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(1, '缘分', '天注定');
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(1, '微小说', '');
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(1, '醍醐灌顶', '你在或者不在');
 
 
-INSERT INTO `resource_category`(`name`, `intro`) VALUES('精彩文章', '分享来自互联网关于Go语言的精彩文章');
-INSERT INTO `resource_category`(`name`, `intro`) VALUES('开源项目', '收集优秀的开源项目、第三方库');
-INSERT INTO `resource_category`(`name`, `intro`) VALUES('Go语言资料', 'Go语言书籍、资料，提供下载地址或在线链接');
-INSERT INTO `resource_category`(`name`, `intro`) VALUES('其他资源', '分享跟Go相关或其他有用的资源');
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(0, '微语', '微语录露露');
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(6, '语录', '');
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(6, '1句话', '');
+
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(0, '微博微信', '经典');
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(9, '微博经典', '');
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(9, '微信经典', '');
+
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(0, '知乎豆瓣', '分享生活、学习、工作等方方面面');
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(12, '知乎名言', '');
+INSERT INTO `topics_node`(`parent`, `name`, `intro`) VALUES(12, '豆瓣名言', '');
+
+
+INSERT INTO `resource_category`(`name`, `intro`) VALUES('精彩文章', '分享来自互联网的精彩文章');
+INSERT INTO `resource_category`(`name`, `intro`) VALUES('其他资源', '分享有用的资源');

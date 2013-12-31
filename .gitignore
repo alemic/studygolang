@@ -20,3 +20,11 @@ _cgo_export.*
 _testmain.go
 
 *.exe
+config.json
+bin
+pkg
+src/github.com
+src/code.google.com
+src/labix.org
+.idea
+*.exe

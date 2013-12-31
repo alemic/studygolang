@@ -1,0 +1,94 @@
+{{define "topnav"}}
+            <li {{if .active}}class="active"{{end}}><a href="/topics">活跃</a></li> 
+            <li {{if .popular}}class="active"{{end}}><a href="/topics/popular" class="popular"><i class="icon small_liked"></i> 热门</a></li>
+            <li {{if .last}}class="active"{{end}}><a href="/topics/last" rel="nofollow">最新</a></li> 
+            <li><a href="/topics/inspect" rel="nofollow">审帖</a></li>
+            <li><a href="/topics/new" rel="nofollow">投稿</a></li>
+<li class="last active"><a href="/topics/node{{.node.nid}}" itemprop="url"><span itemprop="title">{{.node.name}}</span></a></li>
+{{end}}
+{{define "content"}}
+  <div id="main" class="container-fluid">
+    <div class="content">
+      <div class="box box_gray">
+        <div id="node_info">
+          <div>
+            <h2>{{.node.name}}</h2>
+            <span class="total">共有 {{.total}} 个讨论主题</span>
+          </div>
+          <div class="desc">
+            <p>{{.node.intro}}</p>
+          </div>
+        </div>
+
+      <div class="topics">
+        {{range .topics}}
+        <div class="topic topic_line">
+          <div class="pull-left avatar">
+            <a href="/user/{{.user.Username}}"><img alt="{{.user.Username}}" class="uface" src="{{gravatar .user.Email 48}}" style="width:48px;height:48px;"></a>
+          </div>
+          <div class="right_info">
+            <div class="pull-right replies">
+              {{if .reply}}
+              <a href="/topics/{{.tid}}#reply{{.reply}}" class="count state_false">{{.reply}}</a>
+              {{end}}
+            </div>
+            <div class="infos">
+              <div class="title">
+                <a href="/topics/{{.tid}}">{{.content}}</a>
+              </div>
+              <div class="info">
+                <a href="/user/{{.user.Username}}" data-name="{{.user.Username}}">{{.user.Username}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{else}}
+        <p style="text-align:center;">暂时没有任何帖子</p>
+        {{end}}
+      </div>
+      {{if .page}}
+      <div class="pagination"><ul>{{.page}}</ul></div>
+      {{end}}
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="box" style="text-align:center;">
+      <h2><a href="/topics/node{{.node.nid}}">{{.node.name}}</a></h2>
+      <div class="content">
+        <a href="/topics/new?nid={{.node.nid}}" class="btn btn-success">投稿</a>
+      </div>
+    </div>
+    
+    <div class="hot_nodes nodes box clearfix">
+      <h2>TAGS</h2>
+      <ul id="hotnodes">
+      </ul>
+    </div>
+  </div>
+  </div>
+  </div>
+{{end}}
+{{define "title"}}{{.node.name}} {{end}}
+{{define "css"}}<link href="/static/css/topics.css" media="screen" rel="stylesheet" type="text/css">{{end}}
+{{define "js"}}
+
+<script type="text/javascript">
+$(function(){
+    $.getJSON('/nodes/hot.json', function(data){
+        if (!data.errno) {
+            if (data.nodes == null) {
+                return
+            }
+            var count = data.nodes.length
+              nodeHtml = '';
+            for (var i=0; i<count; i++) {
+                var node = data.nodes[i];
+                nodeHtml += '<li> <a href="/topics/node'+node.nid+'" title="'+node.name+'">'+node.name+'</a></li>';
+            }
+            $('#hotnodes').html(nodeHtml);
+        }
+    });
+});
+</script>
+{{end}}
