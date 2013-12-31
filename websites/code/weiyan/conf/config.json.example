@@ -1,0 +1,14 @@
+{
+    "domain": "pingliwang.com",
+    "host": "0.0.0.0:9090",
+    "drive_name": "mysql",
+    "dsn": "root:@tcp(localhost:3306)/weiyan?charset=utf8",
+    "cookie_secret": "weiyanweiyu",
+    "smtp_username": "78623269@qq.com",
+	"smtp_password": "",
+	"smtp_host": "smtp.qq.com",
+	"smtp_addr": "smtp.qq.com:25",
+	"from_email": "78623269@qq.com",
+    "pid": "pid/weiyan.pid",
+    "auid": "10000"
+ }

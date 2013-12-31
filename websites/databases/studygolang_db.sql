@@ -1,153 +1,144 @@
-/*---------------------------------------------------------------------------*
-  NAME: topics
-  用途：帖子内容表
-*---------------------------------------------------------------------------*/
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : localhost_3306
+Source Server Version : 50534
+Source Host           : localhost:3306
+Source Database       : studygolang
+
+Target Server Type    : MYSQL
+Target Server Version : 50534
+File Encoding         : 65001
+
+Date: 2013-12-31 10:35:57
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for comments
+-- ----------------------------
+DROP TABLE IF EXISTS `comments`;
+CREATE TABLE `comments` (
+  `cid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `objid` int(10) unsigned NOT NULL COMMENT '对象id，属主（评论给谁）',
+  `objtype` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '类型,0-帖子;1-博客;2-资源;3-酷站',
+  `content` varchar(255) NOT NULL,
+  `uid` int(10) unsigned NOT NULL COMMENT '回复者',
+  `floor` int(10) unsigned NOT NULL COMMENT '第几楼',
+  `flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '审核标识,0-未审核;1-已审核;2-审核删除;3-用户自己删除',
+  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`cid`),
+  UNIQUE KEY `objid` (`objid`,`objtype`,`floor`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for message
+-- ----------------------------
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `content` text NOT NULL COMMENT '消息内容',
+  `hasread` enum('未读','已读') NOT NULL DEFAULT '未读',
+  `from` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '来自谁',
+  `fdel` enum('未删','已删') NOT NULL DEFAULT '未删' COMMENT '发送方删除标识',
+  `to` int(10) unsigned NOT NULL COMMENT '发给谁',
+  `tdel` enum('未删','已删') NOT NULL DEFAULT '未删' COMMENT '接收方删除标识',
+  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `to` (`to`),
+  KEY `from` (`from`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='message 短消息（私信）';
+
+-- ----------------------------
+-- Table structure for role
+-- ----------------------------
+DROP TABLE IF EXISTS `role`;
+CREATE TABLE `role` (
+  `roleid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '角色名',
+  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`roleid`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for system_message
+-- ----------------------------
+DROP TABLE IF EXISTS `system_message`;
+CREATE TABLE `system_message` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `msgtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '系统消息类型',
+  `hasread` enum('未读','已读') NOT NULL DEFAULT '未读',
+  `to` int(10) unsigned NOT NULL COMMENT '发给谁',
+  `ext` text NOT NULL COMMENT '额外信息',
+  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `to` (`to`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='system_message 系统消息表';
+
+-- ----------------------------
+-- Table structure for topics
+-- ----------------------------
 DROP TABLE IF EXISTS `topics`;
 CREATE TABLE `topics` (
-  `tid` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `content` text NOT NULL,
-  `nid` int unsigned NOT NULL COMMENT '节点id',
-  `uid` int unsigned NOT NULL COMMENT '帖子作者',
-  `lastreplyuid` int unsigned NOT NULL DEFAULT 0 COMMENT '最后回复者',
-  `lastreplytime` timestamp NOT NULL DEFAULT 0 COMMENT '最后回复时间',
-  `flag` tinyint NOT NULL DEFAULT 0 COMMENT '审核标识,0-未审核;1-已审核;2-审核删除;3-用户自己删除',
-  `ctime` timestamp NOT NULL DEFAULT 0,
+  `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `content` varchar(255) NOT NULL,
+  `nid` int(10) unsigned zerofill NOT NULL COMMENT '节点id',
+  `uid` int(10) unsigned NOT NULL COMMENT '帖子作者',
+  `lastreplyuid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最后回复者',
+  `lastreplytime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '最后回复时间',
+  `view` int(10) unsigned NOT NULL DEFAULT '0',
+  `reply` int(10) unsigned NOT NULL DEFAULT '0',
+  `like` int(10) unsigned NOT NULL DEFAULT '0',
+  `hate` int(10) unsigned NOT NULL DEFAULT '0',
+  `flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '审核标识,0-未审核;1-已审核;2-审核删除;3-用户自己删除',
+  `ctime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `mtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`tid`),
   KEY `uid` (`uid`),
   KEY `nid` (`nid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
 
-/*---------------------------------------------------------------------------*
-  NAME: topics_ex
-  用途：帖子扩展表（计数）
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `topics_ex`;
-CREATE TABLE `topics_ex` (
-  `tid` int unsigned NOT NULL,
-  `view` int unsigned NOT NULL DEFAULT 0 COMMENT '浏览数',
-  `reply` int unsigned NOT NULL DEFAULT 0 COMMENT '回复数',
-  `like` int unsigned NOT NULL DEFAULT 0 COMMENT '喜欢数',
-  `mtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`tid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*---------------------------------------------------------------------------*
-  NAME: topics_node
-  用途：帖子节点表
-*---------------------------------------------------------------------------*/
+-- ----------------------------
+-- Table structure for topics_node
+-- ----------------------------
 DROP TABLE IF EXISTS `topics_node`;
 CREATE TABLE `topics_node` (
-  `nid` int unsigned NOT NULL AUTO_INCREMENT,
-  `parent` int unsigned NOT NULL DEFAULT 0 COMMENT '父节点id，无父节点为0',
+  `nid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `parent` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父节点id，无父节点为0',
   `name` varchar(20) NOT NULL COMMENT '节点名',
   `intro` varchar(50) NOT NULL DEFAULT '' COMMENT '节点简介',
   `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`nid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
-
-/*---------------------------------------------------------------------------*
-  NAME: comments
-  用途：评论表（帖子回复、博客文章评论等，统一处理）
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `comments`;
-CREATE TABLE `comments` (
-  `cid` int unsigned NOT NULL AUTO_INCREMENT,
-  `objid` int unsigned NOT NULL COMMENT '对象id，属主（评论给谁）',
-  `objtype` tinyint unsigned NOT NULL DEFAULT 0 COMMENT '类型,0-帖子;1-博客;2-资源;3-酷站',
-  `content` text NOT NULL,
-  `uid` int unsigned NOT NULL COMMENT '回复者',
-  `floor` int unsigned NOT NULL COMMENT '第几楼',
-  `flag` tinyint NOT NULL DEFAULT 0 COMMENT '审核标识,0-未审核;1-已审核;2-审核删除;3-用户自己删除',
-  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`cid`),
-  UNIQUE KEY (`objid`,`objtype`,`floor`),
-  KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*---------------------------------------------------------------------------*
-  NAME: likes
-  用途：喜欢表（帖子回复、博客文章评论等，统一处理）
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `likes`;
-CREATE TABLE `likes` (
-  `cid` int unsigned NOT NULL AUTO_INCREMENT,
-  `objid` int unsigned NOT NULL COMMENT '对象id，属主（评论给谁）',
-  `objtype` tinyint unsigned NOT NULL DEFAULT 0 COMMENT '类型,0-帖子;1-博客;2-资源;3-酷站',
-  `content` text NOT NULL,
-  `uid` int unsigned NOT NULL COMMENT '回复者',
-  `floor` int unsigned NOT NULL COMMENT '第几楼',
-  `flag` tinyint NOT NULL DEFAULT 0 COMMENT '审核标识,0-未审核;1-已审核;2-审核删除;3-用户自己删除',
-  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`cid`),
-  UNIQUE KEY (`objid`,`objtype`,`floor`),
-  KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-/*---------------------------------------------------------------------------*
-  NAME: views
-  用途：帖子用户最后阅读表（帖子回复、博客文章评论等，统一处理）
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `views`;
-CREATE TABLE `views` (
-  `cid` int unsigned NOT NULL AUTO_INCREMENT,
-  `objid` int unsigned NOT NULL COMMENT '对象id，属主（评论给谁）',
-  `objtype` tinyint unsigned NOT NULL DEFAULT 0 COMMENT '类型,0-帖子;1-博客;2-资源;3-酷站',
-  `content` text NOT NULL,
-  `uid` int unsigned NOT NULL COMMENT '回复者',
-  `floor` int unsigned NOT NULL COMMENT '第几楼',
-  `flag` tinyint NOT NULL DEFAULT 0 COMMENT '审核标识,0-未审核;1-已审核;2-审核删除;3-用户自己删除',
-  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`cid`),
-  UNIQUE KEY (`objid`,`objtype`,`floor`),
-  KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-/*---------------------------------------------------------------------------*
-  NAME: user_login
-  用途：用户登录表
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `user_login`;
-CREATE TABLE `user_login` (
-  `uid` int unsigned NOT NULL,
-  `email` varchar(128) NOT NULL DEFAULT '',
+-- ----------------------------
+-- Table structure for user_active
+-- ----------------------------
+DROP TABLE IF EXISTS `user_active`;
+CREATE TABLE `user_active` (
+  `uid` int(10) unsigned NOT NULL,
+  `email` varchar(128) NOT NULL,
   `username` varchar(20) NOT NULL COMMENT '用户名',
-  `passcode` char(12) NOT NULL DEFAULT '' COMMENT '加密随机数',
-  `passwd` char(32) NOT NULL DEFAULT '' COMMENT 'md5密码',
+  `weight` smallint(6) NOT NULL DEFAULT '1' COMMENT '活跃度，越大越活跃',
+  `avatar` varchar(128) NOT NULL DEFAULT '' COMMENT '头像(暂时使用http://www.gravatar.com)',
+  `mtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`uid`),
-  UNIQUE KEY (`username`),
-  UNIQUE KEY (`email`)
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*---------------------------------------------------------------------------*
-  NAME: bind_user
-  用途：第三方绑定表
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `bind_user`;
-CREATE TABLE `bind_user` (
-  `uid` int unsigned NOT NULL,
-  `type` tinyint NOT NULL DEFAULT 0 COMMENT '绑定的第三方类型',
-  `email` varchar(128) NOT NULL DEFAULT '',
-  `tuid` int unsigned NOT NULL DEFAULT 0 COMMENT '第三方uid',
-  `username` varchar(20) NOT NULL COMMENT '用户名',
-  `token` varchar(50) NOT NULL COMMENT '第三方access_token',
-  `refresh` varchar(50) NOT NULL COMMENT '第三方refresh_token',
-  PRIMARY KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*---------------------------------------------------------------------------*
-  NAME: user_info
-  用途：用户信息表
-*---------------------------------------------------------------------------*/
+-- ----------------------------
+-- Table structure for user_info
+-- ----------------------------
 DROP TABLE IF EXISTS `user_info`;
 CREATE TABLE `user_info` (
-  `uid` int unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `email` varchar(128) NOT NULL DEFAULT '',
-  `open` tinyint NOT NULL DEFAULT 1 COMMENT '邮箱是否公开，默认公开',
+  `open` tinyint(4) NOT NULL DEFAULT '1' COMMENT '邮箱是否公开，默认公开',
   `username` varchar(20) NOT NULL COMMENT '用户名',
   `name` varchar(20) NOT NULL DEFAULT '' COMMENT '姓名',
   `avatar` varchar(128) NOT NULL DEFAULT '' COMMENT '头像(暂时使用http://www.gravatar.com)',
@@ -160,172 +151,63 @@ CREATE TABLE `user_info` (
   `introduce` text NOT NULL COMMENT '个人简介',
   `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`uid`),
-  UNIQUE KEY (`username`),
-  UNIQUE KEY (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=9686 DEFAULT CHARSET=utf8;
 
-/*---------------------------------------------------------------------------*
-  NAME: user_active
-  用途：活跃用户表
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `user_active`;
-CREATE TABLE `user_active` (
-  `uid` int unsigned NOT NULL,
-  `email` varchar(128) NOT NULL,
+-- ----------------------------
+-- Table structure for user_login
+-- ----------------------------
+DROP TABLE IF EXISTS `user_login`;
+CREATE TABLE `user_login` (
+  `uid` int(10) unsigned NOT NULL,
+  `email` varchar(128) NOT NULL DEFAULT '',
   `username` varchar(20) NOT NULL COMMENT '用户名',
-  `weight` smallint NOT NULL DEFAULT 1 COMMENT '活跃度，越大越活跃',
-  `avatar` varchar(128) NOT NULL DEFAULT '' COMMENT '头像(暂时使用http://www.gravatar.com)',
-  `mtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `passcode` char(12) NOT NULL DEFAULT '' COMMENT '加密随机数',
+  `passwd` char(32) NOT NULL DEFAULT '' COMMENT 'md5密码',
   PRIMARY KEY (`uid`),
-  UNIQUE KEY (`username`),
-  UNIQUE KEY (`email`)
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*---------------------------------------------------------------------------*
-  NAME: role
-  用途：角色表，常驻内存
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `role`;
-CREATE TABLE `role` (
-  `roleid` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '角色名',
-  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`roleid`),
-  UNIQUE KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*---------------------------------------------------------------------------*
-  NAME: authority
-  用途：权限表，常驻内存
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `authority`;
-CREATE TABLE `authority` (
-  `aid` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '权限名',
-  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`aid`),
-  UNIQUE KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*---------------------------------------------------------------------------*
-  NAME: role_authority
-  用途：角色拥有的权限表
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `role_authority`;
-CREATE TABLE `role_authority` (
-  `roleid` int unsigned NOT NULL,
-  `aid` int unsigned NOT NULL,
-  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`roleid`, `aid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*---------------------------------------------------------------------------*
-  NAME: user_role
-  用途：用户角色表（用户是什么角色，可以多个角色）
-*---------------------------------------------------------------------------*/
+-- ----------------------------
+-- Table structure for user_role
+-- ----------------------------
 DROP TABLE IF EXISTS `user_role`;
 CREATE TABLE `user_role` (
-  `uid` int unsigned NOT NULL,
-  `roleid` int unsigned NOT NULL,
+  `uid` int(10) unsigned NOT NULL,
+  `roleid` int(10) unsigned NOT NULL,
   `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`uid`, `roleid`)
+  PRIMARY KEY (`uid`,`roleid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-/*---------------------------------------------------------------------------*
-  NAME: message
-  用途：短消息（私信）
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `message`;
-CREATE TABLE `message` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `content` text NOT NULL COMMENT '消息内容',
-  `hasread` enum('未读','已读') NOT NULL DEFAULT '未读',
-  `from` int unsigned NOT NULL DEFAULT 0 COMMENT '来自谁',
-  `fdel` enum('未删','已删') NOT NULL DEFAULT '未删' COMMENT '发送方删除标识',
-  `to` int unsigned NOT NULL COMMENT '发给谁',
-  `tdel` enum('未删','已删') NOT NULL DEFAULT '未删' COMMENT '接收方删除标识',
+-- ----------------------------
+-- Table structure for views
+-- ----------------------------
+DROP TABLE IF EXISTS `views`;
+CREATE TABLE `views` (
+  `cid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `objid` int(10) unsigned NOT NULL COMMENT '对象id，属主（评论给谁）',
+  `objtype` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '类型,0-帖子;1-博客;2-资源;3-酷站',
+  `content` text NOT NULL,
+  `uid` int(10) unsigned NOT NULL COMMENT '回复者',
+  `floor` int(10) unsigned NOT NULL COMMENT '第几楼',
+  `flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '审核标识,0-未审核;1-已审核;2-审核删除;3-用户自己删除',
   `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY (`to`),
-  KEY (`from`)
-) COMMENT 'message 短消息（私信）' ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`cid`),
+  UNIQUE KEY `objid` (`objid`,`objtype`,`floor`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*---------------------------------------------------------------------------*
-  NAME: system_message
-  用途：系统消息表
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `system_message`;
-CREATE TABLE `system_message` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `msgtype` tinyint NOT NULL DEFAULT 0 COMMENT '系统消息类型',
-  `hasread` enum('未读','已读') NOT NULL DEFAULT '未读',
-  `to` int unsigned NOT NULL COMMENT '发给谁',
-  `ext` text NOT NULL COMMENT '额外信息',
-  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY (`to`)
-) COMMENT 'system_message 系统消息表' ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*---------------------------------------------------------------------------*
-  NAME: wiki
-  用途：wiki页（需要考虑审核问题？）
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `wiki`;
-CREATE TABLE `wiki` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL COMMENT 'wiki标题',
-  `content` longtext NOT NULL COMMENT 'wiki内容',
-  `uri` varchar(50) NOT NULL COMMENT 'uri',
-  `uid` int unsigned NOT NULL COMMENT '作者',
-  `cuid` varchar(100) NOT NULL DEFAULT '' COMMENT '贡献者',
-  `ctime` timestamp NOT NULL DEFAULT 0,
-  `mtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY (`uri`)
-) COMMENT 'wiki页' ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-/*---------------------------------------------------------------------------*
-  NAME: resource
-  用途：资源表：包括Golang资源下载
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `resource`;
-CREATE TABLE `resource` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL COMMENT '资源标题',
-  `form` enum('只是链接','包括内容'),
-  `content` longtext NOT NULL COMMENT '资源内容',
-  `url` varchar(150) NOT NULL COMMENT '链接url',
-  `uid` int unsigned NOT NULL COMMENT '作者',
-  `catid` int unsigned NOT NULL COMMENT '所属类别',
-  `ctime` timestamp NOT NULL DEFAULT 0,
-  `mtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) COMMENT '资源' ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*---------------------------------------------------------------------------*
-  NAME: resource_ex
-  用途：资源扩展表（计数）
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `resource_ex`;
-CREATE TABLE `resource_ex` (
-  `id` int unsigned NOT NULL,
-  `viewnum` int unsigned NOT NULL DEFAULT 0 COMMENT '浏览数',
-  `cmtnum` int unsigned NOT NULL DEFAULT 0 COMMENT '回复数',
-  `mtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) COMMENT '资源扩展表' ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*---------------------------------------------------------------------------*
-  NAME: resource_category
-  用途：资源分类表
-*---------------------------------------------------------------------------*/
-DROP TABLE IF EXISTS `resource_category`;
-CREATE TABLE `resource_category` (
-  `catid` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) NOT NULL COMMENT '分类名',
-  `intro` varchar(50) NOT NULL DEFAULT '' COMMENT '分类简介',
-  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`catid`)
-) COMMENT '资源分类表' ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- ----------------------------
+-- Table structure for vote
+-- ----------------------------
+DROP TABLE IF EXISTS `vote`;
+CREATE TABLE `vote` (
+  `vid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '绑定的第三方类型',
+  `ip` varchar(128) NOT NULL DEFAULT '',
+  `tid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '第三方uid',
+  PRIMARY KEY (`vid`),
+  UNIQUE KEY `uid` (`uid`,`ip`,`tid`)
+) ENGINE=InnoDB AUTO_INCREMENT=225 DEFAULT CHARSET=utf8;

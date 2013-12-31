@@ -1,31 +1,13 @@
-studygolang
+weiyan
 ===========
-[Golang中文社区 | Go语言学习园地](http://studygolang.com "Golang中文社区 | Go语言学习园地") 源码
+基于studygolang模仿糗百的网站 http://pingliwang.com:9090/
 
-网站上线时间：2013-03-15 14:38:09
 
-目前只开发了主要功能，还有不少功能在不断开发中。欢迎有兴趣的gopher们参与进来，一起构建一个完善的 Golang 中文社区，Go语言爱好者的学习家园。
+# 本地搭建一个 Weiyan 社区 #
 
-#目前在正开发或需要开发的功能
-1. 热门节点
-2. 小贴士
-3. 喜欢
-4. 收藏
-5. 活跃用户（已完成）
-6. 关注
-7. 用第三方账号登录
-8. 绑定github后显示其代码
-9. 同步到微博？
-10. wiki（已完成，有些细节待完善）
-11. 资源
-12. 酷站
-13. 后台管理
-
-# 本地搭建一个 Golang 社区 #
-
-1、下载 studygolang 代码
+1、下载 weiyan 代码
 	
-	git clone https://github.com/studygolang/studygolang
+	git clone https://github.com/philsong/studygolang
 
 2、下载安装依赖库（如果依赖库下载不下来可以联系我）
 
@@ -40,7 +22,7 @@ studygolang
 先编译
 
 	// 接着上一步
-	cd ../studygolang/
+	cd ../weiyan/
 	// windows 下执行
 	install.bat
 	// linux/mac 下执行
@@ -57,7 +39,7 @@ studygolang
 
 4、浏览器中查看
 
-在浏览器中输入：http://127.0.0.1:8080
+在浏览器中输入：http://127.0.0.1:9090
 
 应该就能看到了。
 
