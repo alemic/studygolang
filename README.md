@@ -1,6 +1,6 @@
 weiyan
 ===========
-基于studygolang模仿糗百的网站 http://pingliwang.com:9090/
+基于studygolang模仿糗百的网站
 
 
 # 本地搭建一个 Weiyan 社区 #
